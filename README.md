@@ -1,241 +1,31 @@
 # Grubdash: Backend/API
 
+![Alt text](grubdash-header.jpg)
 
-A demonstration of backend work and RESTful API implementation.
-This project sets up a RESTful API, as well as uses custom validation functions, route handlers, and specific API endpoints I created. Note: This repo only contains backend server-side and API code and is meant to only deomstrate backend development.
+## A demonstration of backend work and RESTful API implementation.
+This project sets up a RESTful API, as well as uses custom validation functions, route handlers, and specific API endpoints I created. Note: This repository only contains backend server-side/API code and is meant to only demonstrate backend development. This repository does not include any front-end elements nor is it meant to be interpreted as a full-stack application.
 
-## RESTful API Implementation
-All requests return JSON response. All post requests require application/json body, and return JSON response.
 
-### Endpoints for dishes:
-**Get Dishes:** GET to `/dishes`
-- Requests all existing dish data.
-- Successful GET requests will return an array of JSON objects representing the saved dishes. The response from the server should look like the following:
-```
-{
-  "data": [
-    {
-      "id": "d351db2b49b69679504652ea1cf38241",
-      "name": "Dolcelatte and chickpea spaghetti",
-      "description": "Spaghetti topped with a blend of dolcelatte and fresh chickpeas",
-      "price": 19,
-      "image_url": "https://images.pexels.com/photos/1279330/pexels-photo-1279330.jpeg?h=530&w=350"
-    }
-    // ...
-  ]
-}
-```
+## Concepts and Tools used throughout the implementation of this project include:
 
-**Create New Dish:** POST to `/dishes`
-- POST request will be sent with a single JSON object like so:
-```
-{
-  "data": {
-    "name": "Dolcelatte and chickpea spaghetti",
-    "description": "Spaghetti topped with a blend of dolcelatte and fresh chickpeas",
-    "price": 19,
-    "image_url": "https://images.pexels.com/photos/1279330/pexels-photo-1279330.jpeg?h=530&w=350"
-  }
-}
-```
-- Successful POST requests will return the newly created dish as a JSON object. The response from the server should look like the following:
-```
-{
-  "data": {
-    "id": "d351db2b49b69679504652ea1cf38241",
-    "name": "Dolcelatte and chickpea spaghetti",
-    "description": "Spaghetti topped with a blend of dolcelatte and fresh chickpeas",
-    "price": 19,
-    "image_url": "https://images.pexels.com/photos/1279330/pexels-photo-1279330.jpeg?h=530&w=350"
-  }
-}
-```
+### RESTful design principles
+A robust API should give clear direction for API developers and consumers. It should be easy for the people who are using it to make sense of it. Accordingly, the API's design should be simple, predictable, and consistent. One way to ensure a robust API design is by following RESTful design principles when creating your API.
 
-**Get Specific Dish:** GET to `/dishes/:dishId`
-- Requests a specific dish by `:dishId`
-- Successful GET requests will return a JSON object. The response from the server should look like this:
-```
-{
-  "data": {
-    "id": "d351db2b49b69679504652ea1cf38241",
-    "name": "Dolcelatte and chickpea spaghetti",
-    "description": "Spaghetti topped with a blend of dolcelatte and fresh chickpeas",
-    "price": 19,
-    "image_url": "https://images.pexels.com/photos/1279330/pexels-photo-1279330.jpeg?h=530&w=350"
-  }
-}
-```
+REST, which stands for representational state transfer, is a software architecture style. REST is a set of constraints for building web APIs. A RESTful API server provides access to resources. A client, like the browser or another server, can then access and change the resources.
 
-**Update a Dish:** PUT to `/dishes/:dishId`
-- PUT request will be sent with a single JSON object like so:
-```
-{
-  "data": {
-    "id": "3c637d011d844ebab1205fef8a7e36ea",
-    "name": "Century Eggs",
-    "description": "Whole eggs preserved in clay and ash for a few months",
-    "image_url": "some-valid-url",
-    "price": "17"
-  }
-}
-```
-- Note: The `id` property isn't required in the body of the request, but if it is present, it must match `:dishId` from the route.
-- The response from the server should look like the following:
-```
-{
-  "data": {
-    "id": "3c637d011d844ebab1205fef8a7e36ea",
-    "name": "Century Eggs",
-    "description": "Whole eggs preserved in clay and ash for a few months",
-    "image_url": "some-valid-url",
-    "price": "17"
-  }
-}
-```
+### Major error types and handling
+Another key feature of a robust API is its error-handling approach. When building RESTful APIs using Express, or any other framework or library, validation checks are always necessary as a best practice. And it's always important to return an error response to the client, so that the client can stay informed on why their request isn't working.
 
-### Endpoints for orders:
-**Get Orders:** GET to `/orders`
-- Requests a list of all existing order data.
-- Successful GET requests will return an array of JSON objects representing the saved orders. The response from the server should look like the following:
-```
-{
-  "data": [
-    {
-      "id": "5a887d326e83d3c5bdcbee398ea32aff",
-      "deliverTo": "308 Negra Arroyo Lane, Albuquerque, NM",
-      "mobileNumber": "(505) 143-3369",
-      "status": "delivered",
-      "dishes": [
-        {
-          "id": "d351db2b49b69679504652ea1cf38241",
-          "name": "Dolcelatte and chickpea spaghetti",
-          "description": "Spaghetti topped with a blend of dolcelatte and fresh chickpeas",
-          "image_url": "https://images.pexels.com/photos/1279330/pexels-photo-1279330.jpeg?h=530&w=350",
-          "price": 19,
-          "quantity": 2
-        }
-        // ...
-      ]
-    }
-    // ...
-  ]
-}
-```
+However, as the API grows in size and complexity, handling every possible error and returning a response for every validation check can quickly become tedious; it can make it difficult to quickly grasp what the code is doing. Having a centralized error-handling approach can simplify the code.
 
-**Create New Order:** POST to `/orders`
-- POST request will be sent with a single JSON object like so:
-```
-{
-  "data": {
-    "deliverTo": "308 Negra Arroyo Lane, Albuquerque, NM",
-    "mobileNumber": "(505) 143-3369",
-    "status": "delivered",
-    "dishes": [
-      {
-        "id": "d351db2b49b69679504652ea1cf38241",
-        "name": "Dolcelatte and chickpea spaghetti",
-        "description": "Spaghetti topped with a blend of dolcelatte and fresh chickpeas",
-        "image_url": "https://images.pexels.com/photos/1279330/pexels-photo-1279330.jpeg?h=530&w=350",
-        "price": 19,
-        "quantity": 2
-      }
-    ]
-  }
-}
-```
-- Note: Each dish in the Order's `dishes` property is a complete copy of the dish, rather than a reference to the dish by ID. This is so the order does not change 
-retroactively if the dish data is updated some time after the order is created.
-- Successful POST requests will return the newly created order as a JSON object. The response from the server should look like the following:
-```
-{
-  "data": {
-    "id": "5a887d326e83d3c5bdcbee398ea32aff",
-    "deliverTo": "308 Negra Arroyo Lane, Albuquerque, NM",
-    "mobileNumber": "(505) 143-3369",
-    "status": "delivered",
-    "dishes": [
-      {
-        "id": "d351db2b49b69679504652ea1cf38241",
-        "name": "Dolcelatte and chickpea spaghetti",
-        "description": "Spaghetti topped with a blend of dolcelatte and fresh chickpeas",
-        "image_url": "https://images.pexels.com/photos/1279330/pexels-photo-1279330.jpeg?h=530&w=350",
-        "price": 19,
-        "quantity": 2
-      }
-    ]
-  }
-}
-```
+### Organizing Express code
+Besides following RESTful design principles and having centralized error handling, a robust API is built on top of well-organized and well-structured code. Like all software projects, Express APIs tend to get larger and more complex over time. The more files that you have in the project, the more important that the file organization becomes. The files need to be organized in a way that makes it easy to find and modify existing code, and to add new code in a location consistent with the existing code. An example of advanced organization is by using ideas like:
 
-**Get Order by ID:** GET to `/orders/:orderId`
-- Requests a specific order by `:orderId`
-- Successful GET requests will return a JSON object. The response from the server should look like this:
-```
-{
-  "data": {
-    "id": "f6069a542257054114138301947672ba",
-    "deliverTo": "1600 Pennsylvania Avenue NW, Washington, DC 20500",
-    "mobileNumber": "(202) 456-1111",
-    "status": "out-for-delivery",
-    "dishes": [
-      {
-        "id": "90c3d873684bf381dfab29034b5bba73",
-        "name": "Falafel and tahini bagel",
-        "description": "A warm bagel filled with falafel and tahini",
-        "image_url": "https://images.pexels.com/photos/4560606/pexels-photo-4560606.jpeg?h=530&w=350",
-        "price": 6,
-        "quantity": 1
-      }
-    ]
-  }
-}
-```
+- **Group-by-resource structure:** A file organization structure in which any code that handles requests to a resource is stored in a folder with the same name as the resource, regardless of the URL to that resource.
 
-**Update Order:** PUT to `/orders/:orderId`
-- PUT request will be sent with a single JSON object like so:
-```
-{
-  "data": {
-    "deliverTo": "Rick Sanchez (C-132)",
-    "mobileNumber": "(202) 456-1111",
-    "status": "delivered",
-    "dishes": [
-      {
-        "id": "90c3d873684bf381dfab29034b5bba73",
-        "name": "Falafel and tahini bagel",
-        "description": "A warm bagel filled with falafel and tahini",
-        "image_url": "https://images.pexels.com/photos/4560606/pexels-photo-4560606.jpeg?h=530&w=350",
-        "price": 6,
-        "quantity": 1
-      }
-    ]
-  }
-}
-```
-- Note: The `id` property isn't required in the body of the request, but if it is present, it must match `:orderId` from the route.
-- The response from the server should look like the following:
-```
-{
-  "data": {
-    "id": "f6069a542257054114138301947672ba",
-    "deliverTo": "Rick Sanchez (C-132)",
-    "mobileNumber": "(202) 456-1111",
-    "status": "delivered",
-    "dishes": [
-      {
-        "id": "90c3d873684bf381dfab29034b5bba73",
-        "name": "Falafel and tahini bagel",
-        "description": "A warm bagel filled with falafel and tahini",
-        "image_url": "https://images.pexels.com/photos/4560606/pexels-photo-4560606.jpeg?h=530&w=350",
-        "price": 6,
-        "quantity": 1
-      }
-    ]
-  }
-}
-```
+- **Controller files:** A file that defines and exports the route handler functions and is responsible for managing the state of a single resource in an API.
 
-**Delete Order:** DELETE to `/orders/:orderId`
-- DELETE request will be sent without a request body.
-- Note: If the given `:orderId` does not match an existing order, the server should respond with `404`.
-- A successful DELETE request will result in a response status code of 204 and no response body.
+- **Express router:** A modular middleware and routing system that can be attached to an Express app
+
+### Passing data on the response
+There is a special ```locals``` property on the response that can be used to share variables scoped to the request. The ```locals``` property is an object where you can add properties that will be available only during that request-response cycle. Once the request-response cycle ends (meaning that the response has been sent to the client), the ```locals``` object is deleted.
